@@ -18,9 +18,17 @@ set(update_command "")
 if(BOOTSTRAP_IN_TREE OR NOT DEFINED BOOTSTRAP_IN_TREE)
   set(update_command UPDATE_COMMAND autoreconf -vif WORKING_DIRECTORY <SOURCE_DIR>)
 endif()
+set(configure_start ${PROJECT_SOURCE_DIR}/lib/goom2k4-0/configure)
+if(DEPENDS_PATH AND EXISTS ${DEPENDS_PATH}/share/config.site)
+  set(configure_start CONFIG_SITE=${DEPENDS_PATH}/share/config.site ${configure_start})
+endif()
 externalproject_add(libgoom SOURCE_DIR ${PROJECT_SOURCE_DIR}/lib/goom2k4-0
                     "${update_command}"
-                    CONFIGURE_COMMAND ${PROJECT_SOURCE_DIR}/lib/goom2k4-0/configure --disable-shared --enable-static --with-pic --prefix=<INSTALL_DIR>
+                    CONFIGURE_COMMAND ${configure_start}
+                                      --disable-shared
+                                      --enable-static
+                                      --with-pic
+                                      --prefix=<INSTALL_DIR>
                     BUILD_COMMAND ${MAKE}
                     INSTALL_COMMAND "")
 
